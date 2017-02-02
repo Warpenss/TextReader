@@ -6,6 +6,10 @@
 
     <groupId>TextReader</groupId>
     <artifactId>TextReader</artifactId>
+    <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+    </configuration>
     <version>0.01</version>
 
 
