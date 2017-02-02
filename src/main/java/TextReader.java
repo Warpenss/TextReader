@@ -12,10 +12,9 @@ public class TextReader {
 
         System.out.println("Вы ввели = " + userInput);
 
-        encoding(userInput);
+        String everything = plainText(userInput);
 
-        String everything = "";
-
+        System.out.println(" ");
         System.out.println(everything);
     }
 
@@ -30,10 +29,14 @@ public class TextReader {
             ioe.printStackTrace();
         }
 
-        return getUserInput;
+        if (getUserInput.contains("\"")){
+            System.out.println("В адресе бнаружен недопустимый символ \" . Он будет удалён.");
+        }
+
+        return getUserInput.replace("\"", "");
     }
 
-    private static void encoding(String userInput){
+    private static String encoding(String userInput){
         byte[] buf = new byte[4096];
 
         FileInputStream fis = null;
@@ -42,8 +45,7 @@ public class TextReader {
             fis = new FileInputStream(userInput);
         }
         catch (FileNotFoundException e) {
-            System.out.println("Неверный адрес. Попробуйте снова.");
-            main(null);
+            e.printStackTrace();
         }
 
         UniversalDetector detector = new UniversalDetector(null);
@@ -77,11 +79,13 @@ public class TextReader {
         }
 
         detector.reset();
+
+        return encoding;
     }
 
-
-    /*private static String plainText(String userInput){
-        try (BufferedReader reader = new BufferedReader(new FileReader(userInput))) {
+    private static String plainText(String userInput){
+        try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(userInput), encoding(userInput)));
             StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
 
@@ -94,12 +98,15 @@ public class TextReader {
             userInput = builder.toString();
         }
         catch (IOException ioe) {
-            System.out.println("Неправильный адрес");
+            System.out.println("Неверный адрес. Попробуйте снова.");
+            System.out.println(" ");
             main(null);
+
+
         }
 
         return userInput;
-    }*/
+    }
 
 
 }
