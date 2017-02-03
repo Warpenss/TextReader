@@ -10,12 +10,11 @@ public class TextReader {
 
         String userInput = getUserInput().replace("\"", "");
 
-        System.out.println("Вы ввели = " + userInput);
-
         String everything = plainText(userInput);
 
         System.out.println(" ");
-        System.out.println(everything);
+        System.out.println("Количество слов = " + countWords(everything));
+       // System.out.println(everything);
     }
 
     private static String getUserInput(){
@@ -32,6 +31,7 @@ public class TextReader {
         if (getUserInput.contains("\"")){
             System.out.println("В адресе бнаружен недопустимый символ \" . Он будет удалён.");
         }
+        System.out.println("Вы ввели = " + getUserInput);
 
         return getUserInput.replace("\"", "");
     }
@@ -84,29 +84,61 @@ public class TextReader {
     }
 
     private static String plainText(String userInput){
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(userInput), encoding(userInput)));
-            StringBuilder builder = new StringBuilder();
-            String line = reader.readLine();
+        boolean tryAgain = true;
+        int count = 0;
 
-            while (line != null){
-                builder.append(line);
-                builder.append(System.lineSeparator());
-                line = reader.readLine();
+
+        while (tryAgain) {
+            if (count >= 1) {
+                userInput = getUserInput().replace("\"", "");
             }
+            try{
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(userInput), encoding(userInput)));
+                StringBuilder builder = new StringBuilder();
+                String line = reader.readLine();
 
-            userInput = builder.toString();
-        }
-        catch (IOException ioe) {
-            System.out.println("Неверный адрес. Попробуйте снова.");
-            System.out.println(" ");
-            main(null);
+                while (line != null){
+                    builder.append(line);
+                    builder.append(System.lineSeparator());
+                    line = reader.readLine();
+                }
 
+                userInput = builder.toString();
+                tryAgain = false;
+            }
+            catch (IOException ioe) {
+                System.out.println("Неверный адрес. Попробуйте снова.");
+                count++;
 
+            }
         }
 
         return userInput;
     }
 
+    private static int countWords(String s){
 
+        int wordCount = 0;
+
+        boolean word = false;
+
+        int endOfLine = s.length() - 1;
+
+        for (int i = 0; i < s.length(); i++) {
+            // if the char is a letter, word = true.
+            if (Character.isLetter(s.charAt(i)) && i != endOfLine) {
+                word = true;
+                // if char isn't a letter and there have been letters before,
+                // counter goes up.
+            } else if (!Character.isLetter(s.charAt(i)) && word) {
+                wordCount++;
+                word = false;
+                // last word of String; if it doesn't end with a non letter, it
+                // wouldn't count without this.
+            } else if (Character.isLetter(s.charAt(i)) && i == endOfLine) {
+                wordCount++;
+            }
+        }
+        return wordCount;
+    }
 }
