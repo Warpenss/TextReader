@@ -14,6 +14,8 @@ public class TextReader {
 
         System.out.println(" ");
         System.out.println("Количество слов = " + countWords(everything));
+        System.out.println("Самая употребляемая буква = " + countChar(everything));
+
        // System.out.println(everything);
     }
 
@@ -140,5 +142,25 @@ public class TextReader {
             }
         }
         return wordCount;
+    }
+
+    private static char countChar(String text) {
+        text = text.replaceAll("\\s+", "");
+
+        char commChar = ' ';
+
+        int maxChar = 0;
+
+        int[] charCount = new int[Character.MAX_VALUE + 1];
+
+        for (int i = text.length() - 1; i >= 0; i--) {
+            char ch = text.charAt(i);
+            if (++charCount[ch] >= maxChar) {
+                maxChar = charCount[ch];
+                commChar = ch;
+            }
+        }
+
+        return commChar;
     }
 }
