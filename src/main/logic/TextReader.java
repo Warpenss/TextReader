@@ -1,4 +1,4 @@
-package main.java;
+package main.logic;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -6,17 +6,19 @@ import java.io.*;
 
 public class TextReader {
     public static void main(String[] args) {
-        System.out.println("Введите директорию .txt файла: ");
+        TextReaderGui.startGui();
 
+
+
+
+        //////Old code that will be deleted
+        /*System.out.println("Введите директорию .txt файла: ");
         String userInput = getUserInput().replace("\"", "");
-
         String everything = plainText(userInput);
-
         System.out.println(" ");
-        System.out.println("Количество слов = " + countWords(everything));
-        System.out.println("Самая употребляемая буква = " + countChar(everything));
-
-       // System.out.println(everything);
+        countWords(everything);
+        countChar(everything);
+        System.out.println(everything);*/
     }
 
     private static String getUserInput(){
@@ -85,7 +87,54 @@ public class TextReader {
         return encoding;
     }
 
-    private static String plainText(String userInput){
+    static int countWords(String s){
+
+        int wordCount = 0;
+
+        boolean word = false;
+
+        int endOfLine = s.length() - 1;
+
+        for (int i = 0; i < s.length(); i++) {
+            // if the char is a letter, word = true.
+            if (Character.isLetter(s.charAt(i)) && i != endOfLine) {
+                word = true;
+                // if char isn't a letter and there have been letters before,
+                // counter goes up.
+            } else if (!Character.isLetter(s.charAt(i)) && word) {
+                wordCount++;
+                word = false;
+                // last word of String; if it doesn't end with a non letter, it
+                // wouldn't count without this.
+            } else if (Character.isLetter(s.charAt(i)) && i == endOfLine) {
+                wordCount++;
+            }
+        }
+
+        return wordCount;
+    }
+
+    static char countChar(String text) {
+        text = text.replaceAll("\\s+", "");
+
+        char commChar = ' ';
+
+        int maxChar = 0;
+
+        int[] charCount = new int[Character.MAX_VALUE + 1];
+
+        for (int i = text.length() - 1; i >= 0; i--) {
+            char ch = text.charAt(i);
+            if (++charCount[ch] >= maxChar) {
+                maxChar = charCount[ch];
+                commChar = ch;
+            }
+        }
+
+        return commChar;
+    }
+
+   /* private static String plainText(String userInput){
         boolean tryAgain = true;
         int count = 0;
 
@@ -116,51 +165,5 @@ public class TextReader {
         }
 
         return userInput;
-    }
-
-    private static int countWords(String s){
-
-        int wordCount = 0;
-
-        boolean word = false;
-
-        int endOfLine = s.length() - 1;
-
-        for (int i = 0; i < s.length(); i++) {
-            // if the char is a letter, word = true.
-            if (Character.isLetter(s.charAt(i)) && i != endOfLine) {
-                word = true;
-                // if char isn't a letter and there have been letters before,
-                // counter goes up.
-            } else if (!Character.isLetter(s.charAt(i)) && word) {
-                wordCount++;
-                word = false;
-                // last word of String; if it doesn't end with a non letter, it
-                // wouldn't count without this.
-            } else if (Character.isLetter(s.charAt(i)) && i == endOfLine) {
-                wordCount++;
-            }
-        }
-        return wordCount;
-    }
-
-    private static char countChar(String text) {
-        text = text.replaceAll("\\s+", "");
-
-        char commChar = ' ';
-
-        int maxChar = 0;
-
-        int[] charCount = new int[Character.MAX_VALUE + 1];
-
-        for (int i = text.length() - 1; i >= 0; i--) {
-            char ch = text.charAt(i);
-            if (++charCount[ch] >= maxChar) {
-                maxChar = charCount[ch];
-                commChar = ch;
-            }
-        }
-
-        return commChar;
-    }
+    }*/
 }
